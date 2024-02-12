@@ -6,11 +6,13 @@ use sdl2;
 use sdl2::{pixels::Color, event::Event, keyboard::Keycode, rect};
 use std::time::Duration;
 
+const SCREEN_SIZE: [i32; 2] = [1280, 720];
+
 fn main() {
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();
 
-    let window = video_subsystem.window("Snake Game", 1280, 720)
+    let window = video_subsystem.window("Snake Game", SCREEN_SIZE[0] as u32, SCREEN_SIZE[1] as u32)
         .position_centered()
         .build()
         .unwrap();
@@ -50,7 +52,7 @@ fn main() {
             }
         }
 
-        let collision = snake.move_snake(fruit);
+        let collision = snake.move_snake(fruit, SCREEN_SIZE);
         canvas.set_draw_color(Color::RGB(0, 0, 0));
         canvas.clear();
         for coord in &snake.coords {

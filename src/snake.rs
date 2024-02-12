@@ -30,7 +30,7 @@ impl Snake {
         }
     }
 
-    pub fn move_snake(&mut self, fruit: Fruit) -> Collision {
+    pub fn move_snake(&mut self, fruit: Fruit, screen_size: [i32; 2]) -> Collision {
         // Moves snake based on `self.direction`
 
         let speed: [i32; 2];
@@ -45,22 +45,33 @@ impl Snake {
         }
 
         // Adding speed to current `head`
-        let new_head = [self.coords[0][0] + speed[0], self.coords[0][1] + speed[1]];
+        let mut new_head = [self.coords[0][0] + speed[0], self.coords[0][1] + speed[1]];
+
+        // Check if snake moves off screen
+        if new_head[1] < 0 {
+            new_head[1] = screen_size[1];
+        } else if new_head[1] > screen_size[1] {
+            new_head[1] = 0;
+        } else if new_head[0] < 0 {
+            new_head[0] = screen_size[0];
+        } else if new_head[0] > screen_size[0] {
+            new_head[0] = 0;
+        }
 
         // Removes last element
         let _ = self.coords.pop();
         self.coords.insert(0, new_head);
 
-        if self.test_fruit_collision(fruit) {
+        if self.test_fruit_collion(fruit) {
             Collision::FruitCollison
-        } else if self.test_snake_collisom() {
+        } else if self.test_snake_collison() {
             Collision::SnakeCollison
         } else {
             Collision::NoneCollison
         }
     }
 
-    fn test_fruit_collision(&mut self, fruit: Fruit) -> bool {
+    fn test_fruit_collion(&mut self, fruit: Fruit) -> bool {
         // Check if `head` of snake has same coords as fruit
         if self.coords[0] == fruit.coords {
             return true;
@@ -69,7 +80,7 @@ impl Snake {
         }
     }
 
-    fn test_snake_collisom(&mut self) -> bool {
+    fn test_snake_collison(&mut self) -> bool {
         for coord in &self.coords[1..] {
             if &self.coords[0] == coord {
                 return true;
