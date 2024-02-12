@@ -24,7 +24,7 @@ fn main() {
 
     let mut event_pump = sdl_context.event_pump().unwrap();
     let mut snake = Snake::new(vec![[50, 0], [25, 0]], Direction::Down);
-    let fruit = Fruit {coords: [100, 100]};
+    let mut fruit = Fruit {coords: [100, 100]};
 
     'running: loop {
         for event in event_pump.poll_iter() {
@@ -36,16 +36,24 @@ fn main() {
                     break 'running
                 },
                 Event::KeyDown {keycode: Some(Keycode::Up), ..} => {
-                    snake.direction = Direction::Up;
+                    if snake.direction != Direction::Down {
+                        snake.direction = Direction::Up;
+                    }
                 }
                 Event::KeyDown {keycode: Some(Keycode::Down), ..} => {
-                    snake.direction = Direction::Down;
+                    if snake.direction != Direction::Up {
+                        snake.direction = Direction::Down;
+                    }
                 }
                 Event::KeyDown {keycode: Some(Keycode::Left), ..} => {
-                    snake.direction = Direction::Left;
+                    if snake.direction != Direction::Right{
+                        snake.direction = Direction::Left;
+                    }
                 }
                 Event::KeyDown {keycode: Some(Keycode::Right), ..} => {
-                    snake.direction = Direction::Right;
+                    if snake.direction != Direction::Left {
+                        snake.direction = Direction::Right;
+                    }
                 }
                 
                 _ => {}
@@ -53,22 +61,39 @@ fn main() {
         }
 
         let collision = snake.move_snake(fruit, SCREEN_SIZE);
+
         canvas.set_draw_color(Color::RGB(0, 0, 0));
         canvas.clear();
+
+        canvas.set_draw_color(Color::RGB(255, 0, 0));
+        let rect = rect::Rect::new(fruit.coords[0], fruit.coords[1], 20, 20);
+        canvas.fill_rect(rect).unwrap();
+
+        let mut i = 0;
         for coord in &snake.coords {
-            canvas.set_draw_color(Color::RGB(255, 255, 255));
-            let rect = rect::Rect::new(coord[0], coord[1], 25, 25);
+            if i == 0 {
+                canvas.set_draw_color(Color::RGB(0, 255, 0));
+                i += 1;
+            } else {
+                canvas.set_draw_color(Color::RGB(255, 255, 255));
+            }
+
+            let rect = rect::Rect::new(coord[0], coord[1], 20, 20);
             canvas.fill_rect(rect).unwrap();
         }
 
-        canvas.set_draw_color(Color::RGB(255, 0, 0));
-        let rect = rect::Rect::new(fruit.coords[0], fruit.coords[1], 25, 25);
-        canvas.fill_rect(rect).unwrap();
+        
 
         if collision == Collision::FruitCollision {
+            fruit.move_to_random_location(SCREEN_SIZE);
             println!("Fruit!");
             snake.grow();
-        }
+            snake.increase_score();
+            print!("Score: {}", snake.score);
+        } else if collision == Collision::SnakeCollision {
+            println!("Snake collision!");
+            break 'running;
+        }         
 
         canvas.present();
         std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 5));

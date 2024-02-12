@@ -81,6 +81,10 @@ impl Snake {
         }
     }
 
+    pub fn increase_score(&mut self) {
+        self.score += 1;
+    }
+
     fn test_fruit_collision(&mut self, fruit: Fruit) -> bool {
         // Check if `head` of snake has same coords as fruit
         if self.coords[0] == fruit.coords {
