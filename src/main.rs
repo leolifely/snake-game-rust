@@ -1,6 +1,6 @@
 pub mod snake;
 pub mod fruit;
-use snake::{Snake, Direction};
+use snake::{Snake, Direction, Collision};
 use fruit::Fruit;
 use sdl2;
 use sdl2::{pixels::Color, event::Event, keyboard::Keycode, rect};
@@ -60,6 +60,16 @@ fn main() {
             let rect = rect::Rect::new(coord[0], coord[1], 25, 25);
             canvas.fill_rect(rect).unwrap();
         }
+
+        canvas.set_draw_color(Color::RGB(255, 0, 0));
+        let rect = rect::Rect::new(fruit.coords[0], fruit.coords[1], 25, 25);
+        canvas.fill_rect(rect).unwrap();
+
+        if collision == Collision::FruitCollision {
+            println!("Fruit!");
+            snake.grow();
+        }
+
         canvas.present();
         std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 5));
     }

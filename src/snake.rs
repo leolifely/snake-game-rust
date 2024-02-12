@@ -10,9 +10,9 @@ pub enum Direction {
 
 #[derive(PartialEq, Debug)]
 pub enum Collision {
-    FruitCollison,
-    SnakeCollison,
-    NoneCollison,
+    FruitCollision,
+    SnakeCollision,
+    NoneCollision,
 }
 
 pub struct Snake {
@@ -62,16 +62,26 @@ impl Snake {
         let _ = self.coords.pop();
         self.coords.insert(0, new_head);
 
-        if self.test_fruit_collion(fruit) {
-            Collision::FruitCollison
-        } else if self.test_snake_collison() {
-            Collision::SnakeCollison
+        if self.test_fruit_collision(fruit) {
+            Collision::FruitCollision
+        } else if self.test_snake_collision() {
+            Collision::SnakeCollision
         } else {
-            Collision::NoneCollison
+            Collision::NoneCollision
         }
     }
 
-    fn test_fruit_collion(&mut self, fruit: Fruit) -> bool {
+    pub fn grow(&mut self) {
+        let len = self.coords.len();
+        match self.direction {
+            Direction::Down => self.coords.push([self.coords[len-1][0], self.coords[len-1][1] - 25]),
+            Direction::Up => self.coords.push([self.coords[len-1][0], self.coords[len-1][1] + 25]),
+            Direction::Left => self.coords.push([self.coords[len-1][0] + 25, self.coords[len-1][1]]),
+            Direction::Right => self.coords.push([self.coords[len-1][0] - 25, self.coords[len-1][1]]),
+        }
+    }
+
+    fn test_fruit_collision(&mut self, fruit: Fruit) -> bool {
         // Check if `head` of snake has same coords as fruit
         if self.coords[0] == fruit.coords {
             return true;
@@ -80,7 +90,7 @@ impl Snake {
         }
     }
 
-    fn test_snake_collison(&mut self) -> bool {
+    fn test_snake_collision(&mut self) -> bool {
         for coord in &self.coords[1..] {
             if &self.coords[0] == coord {
                 return true;
