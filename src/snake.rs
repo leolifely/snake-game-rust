@@ -1,17 +1,24 @@
 use crate::fruit::Fruit;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub enum Direction {
     Up,
     Down,
     Left,
-    Right
+    Right,
+}
+
+#[derive(PartialEq, Debug)]
+pub enum Collision {
+    FruitCollison,
+    SnakeCollison,
+    NoneCollison,
 }
 
 pub struct Snake {
-    coords: Vec<[i32; 2]>,
-    score: i32,
-    direction: Direction,
+    pub coords: Vec<[i32; 2]>,
+    pub score: i32,
+    pub direction: Direction,
 }
 
 impl Snake {
@@ -23,7 +30,7 @@ impl Snake {
         }
     }
 
-    pub fn move_snake(&mut self) {
+    pub fn move_snake(&mut self, fruit: Fruit) -> Collision {
         // Moves snake based on `self.direction`
 
         let speed: [i32; 2];
@@ -42,15 +49,32 @@ impl Snake {
 
         // Removes last element
         let _ = self.coords.pop();
-        self.coords.insert(0, new_head)
+        self.coords.insert(0, new_head);
+
+        if self.test_fruit_collision(fruit) {
+            Collision::FruitCollison
+        } else if self.test_snake_collisom() {
+            Collision::SnakeCollison
+        } else {
+            Collision::NoneCollison
+        }
     }
 
-    pub fn test_fruit_collision(&mut self, fruit: Fruit) -> bool {
+    fn test_fruit_collision(&mut self, fruit: Fruit) -> bool {
         // Check if `head` of snake has same coords as fruit
         if self.coords[0] == fruit.coords {
-            true
+            return true;
         } else {
-            false
+            return false;
         }
+    }
+
+    fn test_snake_collisom(&mut self) -> bool {
+        for coord in &self.coords[1..] {
+            if &self.coords[0] == coord {
+                return true;
+            }
+        }
+        return false;
     }
 }
