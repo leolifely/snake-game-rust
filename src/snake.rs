@@ -17,14 +17,16 @@ pub enum Collision {
 
 pub struct Snake {
     coords: Vec<[i32; 2]>,
+    colours: Vec<sdl2::pixels::Color>,
     score: i32,
     direction: Direction,
 }
 
 impl Snake {
-    pub fn new(starting_coords: Vec<[i32; 2]>, starting_direction: Direction) -> Snake {
+    pub fn new(starting_coords: Vec<[i32; 2]>, starting_colours: Vec<sdl2::pixels::Color>, starting_direction: Direction) -> Snake {
         Snake {
             coords: starting_coords,
+            colours: starting_colours,
             score: 0,
             direction: starting_direction,
         }
@@ -47,7 +49,7 @@ impl Snake {
         // Adding speed to current `head`
         let mut new_head = [self.coords[0][0] + speed[0], self.coords[0][1] + speed[1]];
 
-        // Check if snake moves off screen
+        // Check if snake moves off-screen
         if new_head[1] < 0 {
             new_head[1] = screen_size[1] - 25;
         } else if new_head[1] >= screen_size[1] {
@@ -71,14 +73,22 @@ impl Snake {
         }
     }
 
-    pub fn grow(&mut self) {
+    pub fn grow(&mut self, colour: sdl2::pixels::Color) {
         self.score += 1;
         let len = self.coords.len();
         match self.direction {
-            Direction::Down => self.coords.push([self.coords[len-1][0], self.coords[len-1][1] - 25]),
-            Direction::Up => self.coords.push([self.coords[len-1][0], self.coords[len-1][1] + 25]),
-            Direction::Left => self.coords.push([self.coords[len-1][0] + 25, self.coords[len-1][1]]),
-            Direction::Right => self.coords.push([self.coords[len-1][0] - 25, self.coords[len-1][1]]),
+            Direction::Down => {self.coords.push([self.coords[len-1][0], self.coords[len-1][1] - 25]);
+            self.colours.push(colour);
+            },
+            Direction::Up => {self.coords.push([self.coords[len-1][0], self.coords[len-1][1] + 25]);
+            self.colours.push(colour);
+            },
+            Direction::Left => {self.coords.push([self.coords[len-1][0] + 25, self.coords[len-1][1]]);
+            self.colours.push(colour);
+            },
+            Direction::Right => {self.coords.push([self.coords[len-1][0] - 25, self.coords[len-1][1]]);
+            self.colours.push(colour);
+            },
         }
     }
 
@@ -123,5 +133,9 @@ impl Snake {
 
     pub fn get_coords(&self) -> &Vec<[i32; 2]> {
         &self.coords
+    }
+
+    pub fn get_colours(&self) -> &Vec<sdl2::pixels::Color> {
+        &self.colours
     }
 }
