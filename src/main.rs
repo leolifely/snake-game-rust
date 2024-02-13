@@ -69,8 +69,8 @@ fn main() {
         canvas.clear();
 
         canvas.set_draw_color(Color::RGB(255, 0, 0));
-        let rect = rect::Rect::new(fruit.coords[0], fruit.coords[1], 20, 20);
-        canvas.fill_rect(rect).unwrap();
+        let fruit_rect = rect::Rect::new(fruit.coords[0], fruit.coords[1], 20, 20);
+        canvas.fill_rect(fruit_rect).unwrap();
 
         let mut i = 0;
         for coord in &snake.coords {

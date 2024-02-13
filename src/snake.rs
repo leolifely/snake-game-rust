@@ -57,7 +57,7 @@ impl Snake {
         } else if new_head[0] > screen_size[0] {
             new_head[0] = 0;
         }
-
+        print!("New head: {:?}\n", new_head);
         // Removes last element
         let _ = self.coords.pop();
         self.coords.insert(0, new_head);
@@ -104,7 +104,14 @@ impl Snake {
     }
 
     pub fn change_direction(&mut self, new_direction: Direction) {
-        if self.direction != new_direction {
+        // Change direction of snake
+        if new_direction == Direction::Up && self.direction != Direction::Down {
+            self.direction = new_direction;
+        } else if new_direction == Direction::Down && self.direction != Direction::Up {
+            self.direction = new_direction;
+        } else if new_direction == Direction::Left && self.direction != Direction::Right {
+            self.direction = new_direction;
+        } else if new_direction == Direction::Right && self.direction != Direction::Left {
             self.direction = new_direction;
         }
     }
