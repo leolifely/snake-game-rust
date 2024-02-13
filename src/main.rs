@@ -93,9 +93,7 @@ fn main() {
         if collision == Collision::FruitCollision {
             fruit.move_to_random_location(SCREEN_SIZE);
             snake.grow(get_random_colour());
-            print!("Score: {}", snake.get_score());
         } else if collision == Collision::SnakeCollision {
-            println!("Snake collision!");
             break 'running;
         }
 

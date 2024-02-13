@@ -59,7 +59,6 @@ impl Snake {
         } else if new_head[0] >= screen_size[0] {
             new_head[0] = 0;
         }
-        print!("New head: {:?}\n", new_head);
         // Removes last element
         let _ = self.coords.pop();
         self.coords.insert(0, new_head);

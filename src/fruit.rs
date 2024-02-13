@@ -12,6 +12,5 @@ impl Fruit {
         use rand::Rng;
         let mut rng = rand::thread_rng();
         self.coords = [rng.gen_range(0..(screen_size[0] / 25)) * 25, rng.gen_range(0..(screen_size[1] / 25)) * 25];
-        println!("Fruit moved to: {:?}", self.coords);
     }
 }
