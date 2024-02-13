@@ -25,7 +25,7 @@ fn main() {
     canvas.present();
 
     let mut event_pump = sdl_context.event_pump().unwrap();
-    let mut snake = Snake::new(vec![[50, 0], [25, 0]], Direction::Down);
+    let mut snake = Snake::new(vec![[50, 25], [75, 25]], Direction::Down);
     let mut fruit = Fruit {coords: [100, 100]};
 
     'running: loop {

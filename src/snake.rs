@@ -49,12 +49,12 @@ impl Snake {
 
         // Check if snake moves off screen
         if new_head[1] < 0 {
-            new_head[1] = screen_size[1];
-        } else if new_head[1] > screen_size[1] {
+            new_head[1] = screen_size[1] - 25;
+        } else if new_head[1] >= screen_size[1] {
             new_head[1] = 0;
         } else if new_head[0] < 0 {
-            new_head[0] = screen_size[0];
-        } else if new_head[0] > screen_size[0] {
+            new_head[0] = screen_size[0] - 25;
+        } else if new_head[0] >= screen_size[0] {
             new_head[0] = 0;
         }
         print!("New head: {:?}\n", new_head);
