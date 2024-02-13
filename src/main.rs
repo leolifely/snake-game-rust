@@ -36,26 +36,29 @@ fn main() {
                     break 'running
                 },
                 Event::KeyDown {keycode: Some(Keycode::Up), ..} => {
-                    if snake.direction != Direction::Down {
-                        snake.direction = Direction::Up;
-                    }
+                    snake.change_direction(Direction::Up);
                 }
                 Event::KeyDown {keycode: Some(Keycode::Down), ..} => {
-                    if snake.direction != Direction::Up {
-                        snake.direction = Direction::Down;
-                    }
+                    snake.change_direction(Direction::Down);
                 }
                 Event::KeyDown {keycode: Some(Keycode::Left), ..} => {
-                    if snake.direction != Direction::Right{
-                        snake.direction = Direction::Left;
-                    }
+                    snake.change_direction(Direction::Left);
                 }
                 Event::KeyDown {keycode: Some(Keycode::Right), ..} => {
-                    if snake.direction != Direction::Left {
-                        snake.direction = Direction::Right;
-                    }
+                    snake.change_direction(Direction::Right);
                 }
-                
+                Event::KeyDown {keycode: Some(Keycode::W), ..} => {
+                    snake.change_direction(Direction::Up);
+                }
+                Event::KeyDown {keycode: Some(Keycode::S), ..} => {
+                    snake.change_direction(Direction::Down);
+                }
+                Event::KeyDown {keycode: Some(Keycode::A), ..} => {
+                    snake.change_direction(Direction::Left);
+                }
+                Event::KeyDown {keycode: Some(Keycode::D), ..} => {
+                    snake.change_direction(Direction::Right);
+                }
                 _ => {}
             }
         }

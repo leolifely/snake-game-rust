@@ -102,4 +102,10 @@ impl Snake {
         }
         return false;
     }
+
+    pub fn change_direction(&mut self, new_direction: Direction) {
+        if self.direction != new_direction {
+            self.direction = new_direction;
+        }
+    }
 }
