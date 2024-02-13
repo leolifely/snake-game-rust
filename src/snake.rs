@@ -16,9 +16,9 @@ pub enum Collision {
 }
 
 pub struct Snake {
-    pub coords: Vec<[i32; 2]>,
-    pub score: i32,
-    pub direction: Direction,
+    coords: Vec<[i32; 2]>,
+    score: i32,
+    direction: Direction,
 }
 
 impl Snake {
@@ -72,6 +72,7 @@ impl Snake {
     }
 
     pub fn grow(&mut self) {
+        self.score += 1;
         let len = self.coords.len();
         match self.direction {
             Direction::Down => self.coords.push([self.coords[len-1][0], self.coords[len-1][1] - 25]),
@@ -114,5 +115,13 @@ impl Snake {
         } else if new_direction == Direction::Right && self.direction != Direction::Left {
             self.direction = new_direction;
         }
+    }
+
+    pub fn get_score(&self) -> i32 {
+        self.score
+    }
+
+    pub fn get_coords(&self) -> &Vec<[i32; 2]> {
+        &self.coords
     }
 }

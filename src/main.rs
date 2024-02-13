@@ -1,12 +1,14 @@
+extern crate sdl2;
 pub mod snake;
 pub mod fruit;
 use snake::{Snake, Direction, Collision};
 use fruit::Fruit;
-use sdl2;
-use sdl2::{pixels::Color, event::Event, keyboard::Keycode, rect};
+use sdl2::{pixels::Color, event::Event, keyboard::Keycode, rect, ttf};
 use std::time::Duration;
+use std::path::Path;
 
-const SCREEN_SIZE: [i32; 2] = [1280, 720];
+
+const SCREEN_SIZE: [i32; 2] = [1300, 725];
 
 fn main() {
     let sdl_context = sdl2::init().unwrap();
@@ -59,6 +61,9 @@ fn main() {
                 Event::KeyDown {keycode: Some(Keycode::D), ..} => {
                     snake.change_direction(Direction::Right);
                 }
+                Event::KeyDown {keycode: Some(Keycode::Backspace), ..} => {
+                    snake.grow();
+                }
                 _ => {}
             }
         }
@@ -73,7 +78,7 @@ fn main() {
         canvas.fill_rect(fruit_rect).unwrap();
 
         let mut i = 0;
-        for coord in &snake.coords {
+        for coord in snake.get_coords() {
             if i == 0 {
                 canvas.set_draw_color(Color::RGB(0, 255, 0));
                 i += 1;
@@ -89,16 +94,26 @@ fn main() {
 
         if collision == Collision::FruitCollision {
             fruit.move_to_random_location(SCREEN_SIZE);
-            println!("Fruit!");
             snake.grow();
-            snake.increase_score();
-            print!("Score: {}", snake.score);
+            print!("Score: {}", snake.get_score());
         } else if collision == Collision::SnakeCollision {
             println!("Snake collision!");
             break 'running;
         }         
-
+        draw_score(snake.get_score(), &mut canvas);
         canvas.present();
         std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 5));
     }
+}
+
+fn draw_score(score: i32, canvas: &mut sdl2::render::Canvas<sdl2::video::Window>) {
+    let font_path: &Path = Path::new("fonts/Roboto-Regular.ttf");
+    let texture_creator = canvas.texture_creator();
+    let ttf_context = ttf::init().unwrap();
+    let font = ttf_context.load_font(font_path, 128).unwrap();
+    let surface = font.render(format!("{}", score).as_str())
+        .blended(Color::RGBA(255, 255, 255, 255))
+        .unwrap();
+    let texture = texture_creator.create_texture_from_surface(&surface).unwrap();
+    canvas.copy(&texture, None, rect::Rect::new(0, 0, 50 * format!("{}", score).as_str().len() as u32, 100)).unwrap();
 }
