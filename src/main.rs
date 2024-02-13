@@ -88,9 +88,8 @@ fn main() {
 
             let rect = rect::Rect::new(coord[0], coord[1], 20, 20);
             canvas.fill_rect(rect).unwrap();
+            println!("Drawing Snake");
         }
-
-        
 
         if collision == Collision::FruitCollision {
             fruit.move_to_random_location(SCREEN_SIZE);
